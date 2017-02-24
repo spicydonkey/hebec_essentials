@@ -3,8 +3,7 @@ function GZ = g_bose(Z)
 % Polylog of order 3/2 - Bose-Einstein distribution integral
 
 % USER CONSTS FOR ALGORITHM CONVERGENCE
-tol_err=1e-6;   % incremental error from evaluating series sum
-
+tol_err=1e-20;   % incremental error from evaluating series sum
 
 GZ=0;   % initialise output
 err=inf;    % initialise incremental error
