@@ -4,7 +4,7 @@
 
 % params: [n0, W]
 
-function n_TF = tf_dist(r, params)
+function n_TF = tf_dist(params,r)
     n0=params(1);   % condensate peak density
     W=params(2);    % condensate TF-width (full)
     

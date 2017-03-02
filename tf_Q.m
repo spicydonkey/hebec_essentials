@@ -4,7 +4,7 @@
 
 % params: [N0, W]
 
-function Q_TF = tf_Q(r, params)
+function Q_TF = tf_Q(params,r)
        N0=params(1);    % condensate population number
        W=params(2);     % condensate TF-width (perp to integrated dims)
        
