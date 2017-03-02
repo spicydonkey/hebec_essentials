@@ -10,12 +10,17 @@
 
 clear all;
     
+% TODO: package as a function
+
 % Exp constants
+QE=0.1;     % quantum efficiency of detector
 tof=0.413;
 vz=tof*9.81;
 
 Q_T_sat = 1e6;  % 1 MHZ MCP/DLD counting saturation rate
 Q_Z_sat = Q_T_sat/vz;
+% scale by QE
+Q_Z_sat=Q_Z_sat/QE;
 
 % Load some experimental data
 fpath='Y:\TDC_user\ProgramFiles\my_read_tdc_gui_v1.0.1\dld_output\QuantumDepletion\Run7\d';
@@ -49,7 +54,7 @@ Z_edge=linspace(-6*Z_sd,6*Z_sd,100);
 Z_cent=0.5*(Z_edge(1:end-1)+Z_edge(2:end));
 
 N_Z = histcounts(Z_collate,Z_edge);
-Q_Z = N_Z./diff(Z_edge);    % count rate in Z
+Q_Z = N_Z./(diff(Z_edge)*QE);    % count rate in Z
 
 % Q_Z_sm = smooth(Q_Z,10);
 
@@ -76,7 +81,7 @@ plot(Z_cent_ok,Q_Z_ok,'k*');
 % fit and evaluate N0, W
 Zfit.fun=@tf_Q;
 Zfit.coefname={'N0','W_Z'};
-Zfit.param0=[5e3,20e-3];
+Zfit.param0=[5e4,20e-3];
 Zfit.fitopts=statset('TolFun',1e-50,...
     'TolX',1e-50,...
     'MaxIter',1e6,...
@@ -102,10 +107,10 @@ figure(fig);
 plot(Zfit.Z,Zfit.QZ,'k--');
 
 %% Plot some user-configured models
-param_user=[5e3,15e-3];
-profile_user=tf_Q(param_user,Zfit.Z);
-figure(fig); subplot(1,2,1);
-plot(Zfit.Z,profile_user,'-');
+% param_user=[5e3,15e-3];
+% profile_user=tf_Q(param_user,Zfit.Z);
+% figure(fig); subplot(1,2,1);
+% plot(Zfit.Z,profile_user,'-');
 
 axis tight;
 
@@ -119,7 +124,7 @@ z_edge=linspace(-6*z_sd,6*z_sd,100);
 z_cent=0.5*(z_edge(1:end-1)+z_edge(2:end));
 
 N_z = histcounts(z,z_edge);
-n_z = N_z./(diff(z_edge)*dxy^2);
+n_z = N_z./(diff(z_edge)*dxy^2*QE);     % condensate density profile
 
 figure(fig);
 subplot(1,2,2); box on; grid on;
@@ -141,7 +146,7 @@ plot(z_cent_ok,n_z_ok,'k*');
 % fit and evaluate n0, W
 zfit.fun=@tf_dist;
 zfit.coefname={'n0','W'};
-zfit.param0=[10e10,20e-3];
+zfit.param0=[10e11,20e-3];
 zfit.fitopts=statset('TolFun',1e-50,...
     'TolX',1e-50,...
     'MaxIter',1e6,...
@@ -168,9 +173,9 @@ subplot(1,2,2);
 plot(zfit.z,zfit.nz,'k--');
 
 %% Plot some user-configured models
-param_user=[8e10,18e-3];
-profile_user=tf_dist(param_user,zfit.z);
-figure(fig); subplot(1,2,2);
-plot(zfit.z,profile_user,'-');
+% param_user=[8e10,18e-3];
+% profile_user=tf_dist(param_user,zfit.z);
+% figure(fig); subplot(1,2,2);
+% plot(zfit.z,profile_user,'-');
 
 axis tight;
