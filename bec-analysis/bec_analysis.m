@@ -8,6 +8,8 @@
 % DK Shin
 % 02/03/2017
 
+clear all;
+    
 % Exp constants
 tof=0.413;
 vz=tof*9.81;
@@ -38,6 +40,7 @@ txy0=txy_culled-repmat(bec_cent,[size(txy_culled,1),1]);
 zxy=txy0;
 zxy(:,1)=zxy(:,1)*vz;
 
+%% In-plane integrated count profile
 % get integrated density in Z
 Z_collate = zxy(:,1);       % all z
 
@@ -50,12 +53,16 @@ Q_Z = N_Z./diff(Z_edge);    % count rate in Z
 
 % Q_Z_sm = smooth(Q_Z,10);
 
-fig=figure(100);
-subplot(1,2,1);
+fig=figure();
+subplot(1,2,1); box on; grid on;
 hold on;
 plot(Z_cent,Q_Z,'-.');          
 % plot(Z_cent,Q_Z_sm,'k-');       % smoothed
+axis tight;
 refline(0,Q_Z_sat);     % saturation
+
+title('in-plane integrated count rate');
+xlabel('Z [m]'); ylabel('Q(Z) [counts/m]');
 
 % handle saturation effects
 idx_QZ_ok=Q_Z<Q_Z_sat;
@@ -67,9 +74,42 @@ figure(fig);
 plot(Z_cent_ok,Q_Z_ok,'k*');
 
 % fit and evaluate N0, W
+Zfit.fun=@tf_Q;
+Zfit.coefname={'N0','W_Z'};
+Zfit.param0=[5e3,20e-3];
+Zfit.fitopts=statset('TolFun',1e-50,...
+    'TolX',1e-50,...
+    'MaxIter',1e6,...
+    'UseParallel',1,...
+    'Display','iter');
 
+Zfit.fit=fitnlm(Z_cent_ok,Q_Z_ok,...
+    Zfit.fun,Zfit.param0,...
+    'CoefficientNames',Zfit.coefname,...
+    'Options',Zfit.fitopts);
 
+% Zfit.fit=fitnlm(Z_cent_ok,Q_Z_ok,...
+%     Zfit.fun,Zfit.param0,...
+%     'CoefficientNames',Zfit.coefname);
 
+disp(Zfit.fit);
+
+% get fit profile
+Zfit.Z=linspace(min(Z_cent),max(Z_cent),1000);
+Zfit.QZ=feval(Zfit.fit,Zfit.Z);
+
+figure(fig);
+plot(Zfit.Z,Zfit.QZ,'k--');
+
+%% Plot some user-configured models
+param_user=[5e3,15e-3];
+profile_user=tf_Q(param_user,Zfit.Z);
+figure(fig); subplot(1,2,1);
+plot(Zfit.Z,profile_user,'-');
+
+axis tight;
+
+%% 1D count density through centre (Z)
 % get 1D slice in Z
 dxy=1e-3;   % in-plane tolerance
 z=zxy(abs(zxy(:,2))<dxy&abs(zxy(:,3))<dxy,1);
@@ -82,9 +122,12 @@ N_z = histcounts(z,z_edge);
 n_z = N_z./(diff(z_edge)*dxy^2);
 
 figure(fig);
-subplot(1,2,2);
+subplot(1,2,2); box on; grid on;
 hold on;
 plot(z_cent,n_z,'-.');
+
+title('1D condensate density profile');
+xlabel('Z [m]'); ylabel('n(Z) [counts/m^3]');
 
 % handle saturation effects - local saturation effects from integrated count flux
 z_sat_range=[min(Z_cent_sat),max(Z_cent_sat)];
@@ -96,3 +139,38 @@ figure(fig);
 plot(z_cent_ok,n_z_ok,'k*');
 
 % fit and evaluate n0, W
+zfit.fun=@tf_dist;
+zfit.coefname={'n0','W'};
+zfit.param0=[10e10,20e-3];
+zfit.fitopts=statset('TolFun',1e-50,...
+    'TolX',1e-50,...
+    'MaxIter',1e6,...
+    'UseParallel',1,...
+    'Display','iter');
+
+zfit.fit=fitnlm(z_cent_ok,n_z_ok,...
+    zfit.fun,zfit.param0,...
+    'CoefficientNames',zfit.coefname,...
+    'Options',zfit.fitopts);
+
+% zfit.fit=fitnlm(z_cent_ok,n_z_ok,...
+%     zfit.fun,zfit.param0,...
+%     'CoefficientNames',zfit.coefname);
+
+disp(zfit.fit);
+
+% get fit profile
+zfit.z=linspace(min(z_cent),max(z_cent),1000);
+zfit.nz=feval(zfit.fit,zfit.z);
+
+figure(fig);
+subplot(1,2,2);
+plot(zfit.z,zfit.nz,'k--');
+
+%% Plot some user-configured models
+param_user=[8e10,18e-3];
+profile_user=tf_dist(param_user,zfit.z);
+figure(fig); subplot(1,2,2);
+plot(zfit.z,profile_user,'-');
+
+axis tight;
