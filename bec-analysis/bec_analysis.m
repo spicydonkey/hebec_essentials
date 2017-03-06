@@ -9,9 +9,15 @@
 % 02/03/2017
 
 clear all;
-    
+
 % TODO: package as a function
 
+%% Fig graphics
+cf_paperunits='centimeters';
+cf_papersize=[30,21];
+cf_paperposition=[0 0 cf_papersize];
+
+%% Main
 % Exp constants
 QE=0.1;     % quantum efficiency of detector
 tof=0.413;
@@ -23,8 +29,8 @@ Q_Z_sat = Q_T_sat/vz;
 Q_Z_sat=Q_Z_sat/QE;
 
 % Load some experimental data
-fpath='Y:\TDC_user\ProgramFiles\my_read_tdc_gui_v1.0.1\dld_output\QuantumDepletion\Run7\d';
-fid_str='1000';
+fpath='C:\Users\HE BEC\Documents\lab\quantum-depletion\exp7\d';
+fid_str='500';
 
 txy_raw=txy_importer(fpath,fid_str);        % load txy data
 
@@ -58,16 +64,20 @@ Q_Z = N_Z./(diff(Z_edge)*QE);    % count rate in Z
 
 % Q_Z_sm = smooth(Q_Z,10);
 
-fig=figure();
+fig=figure(1);
+clf(fig);
 subplot(1,2,1); box on; grid on;
 hold on;
-plot(Z_cent,Q_Z,'-.');          
+plot(Z_cent,Q_Z,'-.','DisplayName','raw data');
 % plot(Z_cent,Q_Z_sm,'k-');       % smoothed
 axis tight;
-refline(0,Q_Z_sat);     % saturation
+h_sat_line=refline(0,Q_Z_sat);     % saturation
+h_sat_line.Color='r';
+h_sat_line.LineWidth=3;
+h_sat_line.DisplayName='MCP sat rate';
 
 title('in-plane integrated count rate');
-xlabel('Z [m]'); ylabel('Q(Z) [counts/m]');
+xlabel('Z [m]'); ylabel('$Q(Z)$ [counts/m]');
 
 % handle saturation effects
 idx_QZ_ok=Q_Z<Q_Z_sat;
@@ -76,7 +86,7 @@ Z_cent_ok=Z_cent(idx_QZ_ok);
 Q_Z_ok=Q_Z(idx_QZ_ok);
 
 figure(fig);
-plot(Z_cent_ok,Q_Z_ok,'k*');
+plot(Z_cent_ok,Q_Z_ok,'ko','DisplayName','data for fitting');
 
 % fit and evaluate N0, W
 Zfit.fun=@tf_Q;
@@ -104,7 +114,11 @@ Zfit.Z=linspace(min(Z_cent),max(Z_cent),1000);
 Zfit.QZ=feval(Zfit.fit,Zfit.Z);
 
 figure(fig);
-plot(Zfit.Z,Zfit.QZ,'k--');
+subplot(1,2,1);
+dispname_tmp=sprintf('fit: $N_0=%.2g$\n$W_Z=%.2g$',Zfit.fit.Coefficients.Estimate);
+plot(Zfit.Z,Zfit.QZ,'k-','LineWidth',2,'DisplayName',dispname_tmp);
+
+legend('show');     % show legend
 
 %% Plot some user-configured models
 % param_user=[5e3,15e-3];
@@ -129,10 +143,10 @@ n_z = N_z./(diff(z_edge)*dxy^2*QE);     % condensate density profile
 figure(fig);
 subplot(1,2,2); box on; grid on;
 hold on;
-plot(z_cent,n_z,'-.');
+plot(z_cent,n_z,'-.','DisplayName','raw data');
 
 title('1D condensate density profile');
-xlabel('Z [m]'); ylabel('n(Z) [counts/m^3]');
+xlabel('Z [m]'); ylabel('$n(Z)$ [counts/m$^3$]');
 
 % handle saturation effects - local saturation effects from integrated count flux
 z_sat_range=[min(Z_cent_sat),max(Z_cent_sat)];
@@ -141,12 +155,12 @@ z_cent_ok=z_cent(idx_nz_ok);
 n_z_ok=n_z(idx_nz_ok);
 
 figure(fig);
-plot(z_cent_ok,n_z_ok,'k*');
+plot(z_cent_ok,n_z_ok,'ko','DisplayName','data for fitting');
 
 % fit and evaluate n0, W
 zfit.fun=@tf_dist;
 zfit.coefname={'n0','W'};
-zfit.param0=[10e11,20e-3];
+zfit.param0=[7.5e11,18e-3];
 zfit.fitopts=statset('TolFun',1e-50,...
     'TolX',1e-50,...
     'MaxIter',1e6,...
@@ -170,7 +184,10 @@ zfit.nz=feval(zfit.fit,zfit.z);
 
 figure(fig);
 subplot(1,2,2);
-plot(zfit.z,zfit.nz,'k--');
+dispname_tmp=sprintf('fit: $n_0=%.2g$\n$W_Z=%.2g$',zfit.fit.Coefficients.Estimate);
+plot(zfit.z,zfit.nz,'k-','LineWidth',2,'DisplayName',dispname_tmp);
+
+legend('show');
 
 %% Plot some user-configured models
 % param_user=[8e10,18e-3];
@@ -179,3 +196,10 @@ plot(zfit.z,zfit.nz,'k--');
 % plot(zfit.z,profile_user,'-');
 
 axis tight;
+
+%% Set figure dimensions
+fig.Units=cf_paperunits;
+fig.Position=cf_paperposition;
+fig.PaperUnits=cf_paperunits;
+fig.PaperSize=cf_papersize;
+fig.PaperPosition=cf_paperposition;
