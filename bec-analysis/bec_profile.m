@@ -2,14 +2,13 @@
 % Summary: condensate peak density (n0) and condensate population (N0) are key estimations from a
 % density fit to the Z-column and in-plane integrated TOF profile, respectively
 %
+% Fitting functions:
 % * tf_dist - 1D TF density profile
-% * tf_Q - in-plane integrated count rate/density
+% * tf_Q    - in-plane integrated count rate/density
 %
 % DK Shin
 
-% TODO: package as a function
 function varout = bec_profile(zxy)
-
 %% Fig graphics
 cf_paperunits='centimeters';
 cf_papersize=[30,21];
@@ -21,49 +20,35 @@ QE=0.1;     % quantum efficiency of detector
 tof=0.413;
 vz=tof*9.81;
 
-Q_T_sat = 1e6;  % 1 MHZ MCP/DLD counting saturation rate
+Q_T_sat = 1e6;          % 1 MHZ MCP/DLD counting saturation rate
 Q_Z_sat = Q_T_sat/vz;
-% scale by QE
-Q_Z_sat=Q_Z_sat/QE;
+r_sat_tol=0.8;          % cut-off scaling to allow for near saturation
+Q_Z_sat=Q_Z_sat/QE;     % scale by QE
 
-% % Load some experimental data
-% fpath='C:\Users\HE BEC\Documents\lab\quantum-depletion\exp7\d';
-% fid_str='500';
+r_edge=3;       % half-range of profile to analyse from centre (in SD units)
 
-% txy_raw=txy_importer(fpath,fid_str);        % load txy data
-
-% % cull to region of interest
-% ROI_lims={[0.55,0.59],[-30e-3,20e-3],[-40e-3,10e-3]};       % lims in T,X,Y
-% 
-% txy_culled=txy_raw;     % copy raw data
-% for i_dim=1:3
-%     txy_culled=txy_culled(txy_culled(:,i_dim)>ROI_lims{i_dim}(1)&txy_culled(:,i_dim)<ROI_lims{i_dim}(2),:);
-% end
-
-% % centre to BEC
-% bec_cent=mean(txy_culled,1);
-% txy0=txy_culled-repmat(bec_cent,[size(txy_culled,1),1]);
-
-% % T-Z conversion
-% 
-% zxy=txy0;
-% zxy(:,1)=zxy(:,1)*vz;
+%% Parse input
+n_shots=1;
+% If input is a cell-array (shots) of ZXY then collate
+if iscell(zxy)
+    n_shots=size(zxy,1);    % Must be a Nx1 cell array
+    zxy=vertcat(zxy{:});    % collate all shots to a single Mx3 array
+end
 
 %% In-plane integrated count profile
 % get integrated density in Z
 Z_collate = zxy(:,1);       % all z
 
 Z_sd=std(Z_collate);        % rms width
-Z_edge=linspace(-6*Z_sd,6*Z_sd,100);    % TODO: could so many data at tails cause problems in fitting?
+Z_edge=linspace(-r_edge*Z_sd,r_edge*Z_sd,100);    % TODO: could so many data at tails cause problems in fitting?
 Z_cent=0.5*(Z_edge(1:end-1)+Z_edge(2:end));
 
-N_Z = histcounts(Z_collate,Z_edge);
+N_Z = histcounts(Z_collate,Z_edge)/n_shots;     % normalise histogram by the number of shots
 Q_Z = N_Z./(diff(Z_edge)*QE);    % count rate in Z
 
 % Q_Z_sm = smooth(Q_Z,10);
 
-fig=figure(1);
-clf(fig);
+fig=figure();
 subplot(1,2,1); box on; grid on;
 hold on;
 plot(Z_cent,Q_Z,'-.','DisplayName','raw data');
@@ -78,7 +63,7 @@ title('in-plane integrated count rate');
 xlabel('Z [m]'); ylabel('$Q(Z)$ [counts/m]');
 
 % handle saturation effects
-idx_QZ_ok=Q_Z<Q_Z_sat;
+idx_QZ_ok=Q_Z<r_sat_tol*Q_Z_sat;
 Z_cent_sat=Z_cent(~idx_QZ_ok);
 Z_cent_ok=Z_cent(idx_QZ_ok);
 Q_Z_ok=Q_Z(idx_QZ_ok);
@@ -124,8 +109,6 @@ legend('show');     % show legend
 % figure(fig); subplot(1,2,1);
 % plot(Zfit.Z,profile_user,'-');
 
-axis tight;
-
 %% 1D count density through centre (Z)
 % get 1D slice in Z
 dxy=1e-3;   % in-plane tolerance
@@ -135,7 +118,7 @@ z_sd=std(z);
 z_edge=linspace(-6*z_sd,6*z_sd,100);
 z_cent=0.5*(z_edge(1:end-1)+z_edge(2:end));
 
-N_z = histcounts(z,z_edge);
+N_z = histcounts(z,z_edge)/n_shots;     % normalise histogram by the number of shots
 n_z = N_z./(diff(z_edge)*dxy^2*QE);     % condensate density profile
 
 figure(fig);
@@ -158,7 +141,7 @@ plot(z_cent_ok,n_z_ok,'ko','DisplayName','data for fitting');
 % fit and evaluate n0, W
 zfit.fun=@tf_dist;
 zfit.coefname={'n0','W'};
-zfit.param0=[7.5e11,18e-3];
+zfit.param0=[6.0e11,20e-3];
 zfit.fitopts=statset('TolFun',1e-50,...
     'TolX',1e-50,...
     'MaxIter',1e6,...
@@ -193,15 +176,12 @@ legend('show');
 % figure(fig); subplot(1,2,2);
 % plot(zfit.z,profile_user,'-');
 
-axis tight;
-
 %% Set figure dimensions
 fig.Units=cf_paperunits;
 fig.Position=cf_paperposition;
 fig.PaperUnits=cf_paperunits;
 fig.PaperSize=cf_papersize;
 fig.PaperPosition=cf_paperposition;
-
 
 varout=false;        % Dummy return value
 end
