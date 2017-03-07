@@ -79,6 +79,7 @@ Zfit.fitopts=statset('TolFun',1e-50,...
     'TolX',1e-50,...
     'MaxIter',1e6,...
     'UseParallel',1,...
+    'FunValCheck','off',...
     'Display','iter');
 
 Zfit.fit=fitnlm(Z_cent_ok,Q_Z_ok,...
@@ -111,7 +112,7 @@ legend('show');     % show legend
 
 %% 1D count density through centre (Z)
 % get 1D slice in Z
-dxy=1e-3;   % in-plane tolerance
+dxy=1e-3;   % in-plane tolerance (half-width)
 z=zxy(abs(zxy(:,2))<dxy&abs(zxy(:,3))<dxy,1);
 
 z_sd=std(z);
@@ -119,7 +120,7 @@ z_edge=linspace(-6*z_sd,6*z_sd,100);
 z_cent=0.5*(z_edge(1:end-1)+z_edge(2:end));
 
 N_z = histcounts(z,z_edge)/n_shots;     % normalise histogram by the number of shots
-n_z = N_z./(diff(z_edge)*dxy^2*QE);     % condensate density profile
+n_z = N_z./(diff(z_edge)*(2*dxy)^2*QE);     % condensate density profile
 
 figure(fig);
 subplot(1,2,2); box on; grid on;
@@ -141,11 +142,13 @@ plot(z_cent_ok,n_z_ok,'ko','DisplayName','data for fitting');
 % fit and evaluate n0, W
 zfit.fun=@tf_dist;
 zfit.coefname={'n0','W'};
-zfit.param0=[6.0e11,20e-3];
-zfit.fitopts=statset('TolFun',1e-50,...
-    'TolX',1e-50,...
+zfit.param0=[1.5e11,20e-3];
+zfit.fitopts=statset('TolFun',1e-30,...
+    'TolX',1e-30,...
     'MaxIter',1e6,...
     'UseParallel',1,...
+    'FunValCheck','off',...
+    'RobustWgtFun','bisquare',...
     'Display','iter');
 
 zfit.fit=fitnlm(z_cent_ok,n_z_ok,...
@@ -170,6 +173,47 @@ plot(zfit.z,zfit.nz,'k-','LineWidth',2,'DisplayName',dispname_tmp);
 
 legend('show');
 
+%% TF + thermal fit
+% Use above data for fitting
+fig2=figure();
+box on; grid on; hold on;
+plot(z_cent,n_z,'-.','DisplayName','raw data');
+
+title('1D condensate density profile');
+xlabel('Z [m]'); ylabel('$n(Z)$ [counts/m$^3$]');
+
+plot(z_cent_ok,n_z_ok,'ko','DisplayName','data for fitting');
+
+% fit
+zfit2.fun=@bec_thermal_dist;
+zfit2.coefname={'n0','W','Nth','Ta'};
+zfit2.param0=[15e10,20e-3,10000,150e-9];
+zfit2.fitopts=statset('TolFun',1e-50,...
+    'TolX',1e-50,...
+    'MaxIter',1e6,...
+    'UseParallel',1,...
+    'FunValCheck','off',...
+    'RobustWgtFun','welsch',...
+    'Display','iter');
+
+zfit2.fit=fitnlm(z_cent_ok,n_z_ok,...
+    zfit2.fun,zfit2.param0,...
+    'CoefficientNames',zfit2.coefname,...
+    'Options',zfit2.fitopts);
+
+disp(zfit2.fit);
+
+% get fit profile
+zfit2.z=linspace(min(z_cent),max(z_cent),1000);
+zfit2.nz=feval(zfit2.fit,zfit2.z);
+
+figure(fig2);
+dispname_tmp=sprintf('fit: $n_0=%.2g$\n$W_Z=%.2g$\n$Nth=%.2g$\n$T_a=%.2g$',zfit2.fit.Coefficients.Estimate);
+plot(zfit2.z,zfit2.nz,'k-','LineWidth',2,'DisplayName',dispname_tmp);
+
+legend('show');
+
+
 %% Plot some user-configured models
 % param_user=[8e10,18e-3];
 % profile_user=tf_dist(param_user,zfit.z);
@@ -183,5 +227,7 @@ fig.PaperUnits=cf_paperunits;
 fig.PaperSize=cf_papersize;
 fig.PaperPosition=cf_paperposition;
 
+%% Prepare output
 varout=false;        % Dummy return value
+
 end
