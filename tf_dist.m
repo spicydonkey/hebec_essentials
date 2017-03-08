@@ -6,9 +6,9 @@
 
 function n_TF = tf_dist(params,r)
     n0=params(1);   % condensate peak density
-    W=params(2);    % condensate TF-width (full)
+    W=params(2);    % condensate TF-width (half)
     
     % inverted parabola
-    n_TF = n0 - (4*n0/W^2)*(r.^2);
+    n_TF = n0 - (n0/W^2)*(r.^2);
     n_TF(n_TF<0)=0;     % zero-cutoff
 end
