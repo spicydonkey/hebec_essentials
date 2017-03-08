@@ -20,12 +20,29 @@ QE=0.1;     % quantum efficiency of detector
 tof=0.413;
 vz=tof*9.81;
 
+r_sat_tol=0.6;          % cut-off scaling to allow for near saturation
+
 Q_T_sat = 1e6;          % 1 MHZ MCP/DLD counting saturation rate
 Q_Z_sat = Q_T_sat/vz;
-r_sat_tol=0.8;          % cut-off scaling to allow for near saturation
 Q_Z_sat=Q_Z_sat/QE;     % scale by QE
 
-r_edge=3;       % half-range of profile to analyse from centre (in SD units)
+%% profiling config
+% common
+r_edge=2.5;     % half-range of profile to analyse from centre (in SD units)
+n_bins=100;      % number of bins in z-profile range
+
+% 1D slice
+dxy=0.2e-3;       % in-plane tolerance (bin half-width in perp dims) [weak HW~2mm]
+
+%% fit initial conditions
+% in-plane integrated flux
+Zfit.param0=[7e4,10e-3];        % [N0, W]
+
+% 1D density profile (TF only)
+zfit.param0=[3e11,10e-3];     % [n0, W]
+
+% 1D density profile (TF + thermal)
+zfit2.param0=[3e11,10e-3,10000,150e-9];      % [n0,W,Nth,Ta]
 
 %% Parse input
 n_shots=1;
@@ -40,7 +57,7 @@ end
 Z_collate = zxy(:,1);       % all z
 
 Z_sd=std(Z_collate);        % rms width
-Z_edge=linspace(-r_edge*Z_sd,r_edge*Z_sd,100);    % TODO: could so many data at tails cause problems in fitting?
+Z_edge=linspace(-r_edge*Z_sd,r_edge*Z_sd,n_bins);    % TODO: could so many data at tails cause problems in fitting?
 Z_cent=0.5*(Z_edge(1:end-1)+Z_edge(2:end));
 
 N_Z = histcounts(Z_collate,Z_edge)/n_shots;     % normalise histogram by the number of shots
@@ -74,13 +91,12 @@ plot(Z_cent_ok,Q_Z_ok,'ko','DisplayName','data for fitting');
 % fit and evaluate N0, W
 Zfit.fun=@tf_Q;
 Zfit.coefname={'N0','W_Z'};
-Zfit.param0=[5e4,20e-3];
 Zfit.fitopts=statset('TolFun',1e-50,...
     'TolX',1e-50,...
-    'MaxIter',1e6,...
+    'MaxIter',1e4,...
     'UseParallel',1,...
     'FunValCheck','off',...
-    'Display','iter');
+    'Display','off');
 
 Zfit.fit=fitnlm(Z_cent_ok,Q_Z_ok,...
     Zfit.fun,Zfit.param0,...
@@ -112,11 +128,10 @@ legend('show');     % show legend
 
 %% 1D count density through centre (Z)
 % get 1D slice in Z
-dxy=1e-3;   % in-plane tolerance (half-width)
 z=zxy(abs(zxy(:,2))<dxy&abs(zxy(:,3))<dxy,1);
 
 z_sd=std(z);
-z_edge=linspace(-6*z_sd,6*z_sd,100);
+z_edge=linspace(-r_edge*z_sd,r_edge*z_sd,n_bins);
 z_cent=0.5*(z_edge(1:end-1)+z_edge(2:end));
 
 N_z = histcounts(z,z_edge)/n_shots;     % normalise histogram by the number of shots
@@ -142,14 +157,12 @@ plot(z_cent_ok,n_z_ok,'ko','DisplayName','data for fitting');
 % fit and evaluate n0, W
 zfit.fun=@tf_dist;
 zfit.coefname={'n0','W'};
-zfit.param0=[1.5e11,20e-3];
 zfit.fitopts=statset('TolFun',1e-30,...
     'TolX',1e-30,...
     'MaxIter',1e6,...
     'UseParallel',1,...
     'FunValCheck','off',...
-    'RobustWgtFun','bisquare',...
-    'Display','iter');
+    'Display','off');
 
 zfit.fit=fitnlm(z_cent_ok,n_z_ok,...
     zfit.fun,zfit.param0,...
@@ -187,13 +200,11 @@ plot(z_cent_ok,n_z_ok,'ko','DisplayName','data for fitting');
 % fit
 zfit2.fun=@bec_thermal_dist;
 zfit2.coefname={'n0','W','Nth','Ta'};
-zfit2.param0=[15e10,20e-3,10000,150e-9];
 zfit2.fitopts=statset('TolFun',1e-50,...
     'TolX',1e-50,...
-    'MaxIter',1e6,...
+    'MaxIter',1e2,...
     'UseParallel',1,...
     'FunValCheck','off',...
-    'RobustWgtFun','welsch',...
     'Display','iter');
 
 zfit2.fit=fitnlm(z_cent_ok,n_z_ok,...
