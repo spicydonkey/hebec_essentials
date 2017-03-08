@@ -225,6 +225,22 @@ plot(zfit2.z,zfit2.nz,'k-','LineWidth',2,'DisplayName',dispname_tmp);
 legend('show');
 
 
+%% Fit with nlinfit
+beta0=[3e11,10e-3];
+
+options_tmp=statset('TolFun',1e-50,...
+    'TolX',1e-50,...
+    'MaxIter',1e3,...
+    'UseParallel',1,...
+    'FunValCheck','off',...
+    'Display','iter');
+
+[beta,R,J,CovB,MSE,ErrorModelInfo]=nlinfit(z_cent_ok,n_z_ok,@tf_dist,beta0,options_tmp)
+
+ci1=nlparci(beta,R,'covar',CovB)
+ci2=nlparci(beta,R,'jacobian',J)
+
+
 %% Plot some user-configured models
 % param_user=[8e10,18e-3];
 % profile_user=tf_dist(param_user,zfit.z);
