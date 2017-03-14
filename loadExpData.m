@@ -66,7 +66,7 @@ if configs.flags.savedata
         else
             dir_home=fileparts(dir_home);   % extract HOME directory
             warning('configs.files.dirout is unspecified. Setting default to %s.',dir_home);
-            configs.files.dirout=strcat(dir_home,'\');    % default output path
+            configs.files.dirout=dir_home;    % default output path
         end
     end
 else
@@ -197,14 +197,20 @@ files.id_ok=f_id(~(files.missing|files.lowcount));
 %% Plot captured counts (TXY)
 if verbose>2
     h_zxy_all=figure();     % create figure
-    plot_zxy(txy_all,1,'k');
+    plot_zxy(txy_all,1e6,1,'k');
     title('All counts');
     xlabel('X [m]'); ylabel('Y [m]'); zlabel('T [s]');
     
     % save plot
     if configs.flags.savedata
         fname_str='all_counts';
-        saveas(h_zxy_all,[dir_output,fname_str,'.png']);
+        
+%         saveas(h_zxy_all,[dir_output,fname_str,'.png']);
+
+        % TODO - arch dep path delimiter?
+        dir_temp=cd(dir_output);        % move into output directory
+        saveas(h_zxy_all,[fname_str,'.png']);
+        cd(dir_temp);   % back to original directory
     end
 end
 
