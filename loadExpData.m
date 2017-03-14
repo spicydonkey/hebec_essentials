@@ -14,6 +14,7 @@ function [txy_all,files]=loadExpData(configs,verbose)
 %       configs.files.saveddata
 %       configs.files.archive
 %       configs.flags.savedata: saves the data (txy_all, files) to file + configs used
+%       configs.flags.graphics
 %
 %       configs.window - 3x1 cell of Z,X,Y window limits (crop)
 %
@@ -43,28 +44,33 @@ t_fun_start=tic;
 f_id=configs.files.id;      % get files id's to process
 f_path=configs.files.path;  % get path to file (no id token)
 
-% check for user-specified flags
+%%% check for flags
 if ~isfield(configs,'flags')
     warning('configs.flags is unspecified. Setting to default: all flags off.');
     
     % default flags
     configs.flags.savedata=false;
+    configs.flags.graphics=false;
 end
 
+% SAVEDATA
 if ~isfield(configs.flags,'savedata')
     warning('configs.flags.savedata is unspecified. By default data will not be saved.');
     configs.flags.savedata=false;     % default
 end
-if configs.flags.savedata
+if configs.flags.savedata       % SAVEDATA dependencies check
     if ~isfield(configs.files,'dirout')
-        % check for MATLAB default folder, where startup.m is located
-        dir_home=which('startup.m');
+%         % check for MATLAB default folder, where startup.m is located
+%         dir_home=which('startup.m');
+        % check for MATLAB HOME folder by userpath call
+        dir_home=userpath;      % machine independent way to get HOME
         if isequal(dir_home,'')
             warning('configs.files.dirout is unspecified and home directory cannot be found. Setting configs.flags.savedata=false');
             configs.flags.savedata=false;
             configs.files.dirout='';
         else
-            dir_home=fileparts(dir_home);   % extract HOME directory
+%             dir_home=fileparts(dir_home);   % extract HOME directory
+            dir_home=dir_home(1:end-1);     % extract HOME directory
             warning('configs.files.dirout is unspecified. Setting default to %s.',dir_home);
             configs.files.dirout=dir_home;    % default output path
         end
@@ -74,6 +80,12 @@ else
     configs.files.dirout='';    % default
 end
 dir_output=configs.files.dirout;    % output directory
+
+% GRAPHICS
+if ~isfield(configs.flags,'graphics')
+    warning('configs.flags.grahpics is unspecified. By default no graphical feature will be implemented.');
+    configs.flags.graphics=false;   % default
+end
 
 %%% optional fields
 if ~isfield(configs.files,'saveddata')
@@ -195,7 +207,7 @@ txy_all(counter:end)=[];    % delete all empty cells
 files.id_ok=f_id(~(files.missing|files.lowcount));
 
 %% Plot captured counts (TXY)
-if verbose>2
+if verbose>2 && configs.flags.graphics
     fprintf('Plotting captured counts...\n');
     
     h_zxy_all=figure();     % create figure
