@@ -196,6 +196,8 @@ files.id_ok=f_id(~(files.missing|files.lowcount));
 
 %% Plot captured counts (TXY)
 if verbose>2
+    fprintf('Plotting captured counts...\n');
+    
     h_zxy_all=figure();     % create figure
     plot_zxy(txy_all,1e6,1,'k');
     title('All counts');
