@@ -151,6 +151,11 @@ if verbose>2 && visual
     plot_zxy(txy_all,1e6,1,'k');
     title('Raw TXY data');
     xlabel('X [m]'); ylabel('Y [m]'); zlabel('T [s]');
+    
+    view(3);
+    axis vis3d;
+    
+    drawnow;
 end
 
 %% Shot-to-shot atom number fluctuation
@@ -160,13 +165,15 @@ ncounts_std=std(ncounts,'omitnan');
 if visual
     hfig_ncounts_hist=figure();
     hist_ncounts=histogram(ncounts);
-    titlestr=sprintf('Atom number fluctuation (window): %0.2g ± %0.2g\n',ncounts_avg,ncounts_std);
+    titlestr=sprintf('Atom number fluctuation (window): $%0.2g\\pm%0.1g$\n',ncounts_avg,ncounts_std);
     title(titlestr);
     xlabel('no. counts');
     ylabel('no. shots');
     ylim_temp=get(gca,'YLim');
     ylim([0,ylim_temp(2)]);   % set ylim minimum to 0
     box on;
+    
+    drawnow;
 end
 
 %% Summary
