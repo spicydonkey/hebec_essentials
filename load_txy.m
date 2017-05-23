@@ -151,6 +151,11 @@ if verbose>2 && visual
     plot_zxy(txy_all,1e6,1,'k');
     title('Raw TXY data');
     xlabel('X [m]'); ylabel('Y [m]'); zlabel('T [s]');
+    
+    view(3);
+    axis vis3d;
+    
+    drawnow;
 end
 
 %% Shot-to-shot atom number fluctuation
@@ -167,6 +172,9 @@ if visual
     ylim_temp=get(gca,'YLim');
     ylim([0,ylim_temp(2)]);   % set ylim minimum to 0
     box on;
+    hfig{length(hfig)+1}=gcf;
+    
+    drawnow;
 end
 
 %% Summary
