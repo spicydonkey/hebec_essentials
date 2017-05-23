@@ -158,6 +158,7 @@ ncounts_avg=mean(ncounts,'omitnan');
 ncounts_std=std(ncounts,'omitnan');
 
 if visual
+    hfig_ncounts_hist=figure();
     hist_ncounts=histogram(ncounts);
     titlestr=sprintf('Atom number fluctuation (window): %0.2g ± %0.2g\n',ncounts_avg,ncounts_std);
     title(titlestr);
