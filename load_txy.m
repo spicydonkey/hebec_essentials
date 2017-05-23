@@ -165,7 +165,7 @@ ncounts_std=std(ncounts,'omitnan');
 if visual
     hfig_ncounts_hist=figure();
     hist_ncounts=histogram(ncounts);
-    titlestr=sprintf('Atom number fluctuation (window): %0.2g ± %0.2g\n',ncounts_avg,ncounts_std);
+    titlestr=sprintf('Atom number fluctuation (window): $%0.2g\\pm%0.1g$\n',ncounts_avg,ncounts_std);
     title(titlestr);
     xlabel('no. counts');
     ylabel('no. shots');
