@@ -172,6 +172,7 @@ if visual
     ylim_temp=get(gca,'YLim');
     ylim([0,ylim_temp(2)]);   % set ylim minimum to 0
     box on;
+    hfig{length(hfig)+1}=gcf;
     
     drawnow;
 end
