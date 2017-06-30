@@ -174,6 +174,17 @@ if visual
     box on;
     hfig{length(hfig)+1}=gcf;
     
+    hfig_ncounts_trend=figure();
+    nsmooth=11;     % smoothing number
+    plot(smooth(ncounts,nsmooth),'-','LineWidth',1.5);
+    titlestr=sprintf('Atom number in window: $%0.2g\\pm%0.1g$\n',ncounts_avg,ncounts_std);
+    title(titlestr);
+    xlabel('shot number');
+    ylabel('number in window');
+    box on;
+    axis tight;
+    hfig{length(hfig)+1}=gcf;
+    
     drawnow;
 end
 
