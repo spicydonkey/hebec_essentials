@@ -1,6 +1,6 @@
-% 3D mapping: affine transformation of an ellipsoid to unit sphere
-% (zero-centred)
-function xyz_usph=ell2usph(xyz,ellip_param)
+% 3D mapping - affine transformation of unit sphere (centered) to ellipsoid (inverse
+% of ell2usph map)
+function xyz_ell=usph2ell(xyz,ellip_param)
     % xyz: nshot x 3 array
     % ellip_param: 1x9 array defining a general ellipsoid
     %   [centx,centy,centz,eulx,euly,eulz,r1,r2,r3]
@@ -9,27 +9,28 @@ function xyz_usph=ell2usph(xyz,ellip_param)
     %   r are ellipsoid semiprincipal axes (radii)
     
     npoints=size(xyz,1);
-    
+
     % get ellipsoid params
     xyz0=ellip_param(1:3);          % centres
     eul_angle=ellip_param(4:6);     % principal axis euler angles
     erad=ellip_param(7:9);          % semiprincipal axes/radii
     
-    %% ellipsoid --> unit sphere mapping
-    % zero centre
-    xyz_usph=xyz-repmat(xyz0,[npoints,1]);     
+    %% unit sphere --> ellipsoid
+    xyz_ell=xyz;
     
-    % rotation matrix to ellipsoid
-    Mrot=euler2rotm(eul_angle);     
+    Mrot=euler2rotm(eul_angle);     % rotation matrix to ellipsoid coord system
     
-    % rotate ellipsoid to original coord basis
-    xyz_usph=(Mrot*xyz_usph')';
+    % rotate unit sphere frame to ellipsoid principal axes
+    xyz_ell=(Mrot*xyz_ell')';
     
     % radii scaling
     for ii=1:3
-        xyz_usph(:,ii)=xyz_usph(:,ii)/erad(ii);     
+        xyz_ell(:,ii)=xyz_ell(:,ii)*erad(ii);
     end
     
     % rotate back to original coord system
-    xyz_usph=(Mrot'*xyz_usph')';
+    xyz_ell=(Mrot'*xyz_ell')';
+    
+    % shift centre
+    xyz_ell=xyz_ell+repmat(xyz0,[npoints,1]);
 end
