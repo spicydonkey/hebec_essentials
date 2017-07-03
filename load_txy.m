@@ -1,4 +1,4 @@
-function [txy_all,files,hfig]=load_txy(f_path,f_id,window,mincount,maxcount,rot_angle,verbose,visual)
+function [txy_all,files,hfig]=load_txy(f_path,f_id,window,mincount,maxcount,rot_angle,build_txy,verbose,visual)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Loads raw-data DLD/TXY and get counts in region of interest (after XY rotation) and 
 % save to file
@@ -44,6 +44,11 @@ if ~exist('window','var')
     window={[],[],[]};
 end
 
+% default build_txy
+if ~exist('build_txy','var')
+    build_txy=1;
+end
+
 % Initialiase variables
 % file output flags
 files.build_txy=false(length(f_id),1);      % dld files processed to txy
@@ -66,11 +71,16 @@ for i=1:length(f_id)
         
         % rawDLD source file exists
         if fileExists([f_path,num2str(f_id(i)),'.txt'])
-            % Create TXY from DLD
-            if verbose>0, warning('Creating TXY-file from raw source #%d.',f_id(i)); end;
-            dld_raw_to_txy(f_path,f_id(i),f_id(i));
-            files.build_txy(i)=1;
-            
+            if build_txy
+                % Create TXY from DLD
+                if verbose>0, warning('Creating TXY-file from raw source #%d.',f_id(i)); end;
+                dld_raw_to_txy(f_path,f_id(i),f_id(i));
+                files.build_txy(i)=1;
+            else
+                warning('Source file #%d exists but skipping TXY generation.',f_id(i));
+                files.missing(i)=1;
+                continue;
+            end
         % no source exists
         else
             % error - file # is missing
