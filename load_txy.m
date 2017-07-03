@@ -77,14 +77,14 @@ for i=1:length(f_id)
                 dld_raw_to_txy(f_path,f_id(i),f_id(i));
                 files.build_txy(i)=1;
             else
-                warning('Source file #%d exists but skipping TXY generation.',f_id(i));
+                if verbose>0, warning('Source file #%d exists but skipping TXY generation.',f_id(i)); end;
                 files.missing(i)=1;
                 continue;
             end
         % no source exists
         else
             % error - file # is missing
-            warning('Could not load data. Source file #%d is missing.',f_id(i));
+            if verbose>0, warning('Could not load data. Source file #%d is missing.',f_id(i)); end;
             files.missing(i)=1;
             continue;
         end
