@@ -32,7 +32,8 @@ reconst_4_corners_nomcp_flag = reconst_4_corners_nomcp_flag_call;   %boolean var
 reconst_3_corners_flag = reconst_3_corners_flag_call; %boolean variable: if 1 reconstructs events with only 2/3 corners (both with and without MCP pulse)
 
 max_group_time = 3400; %maximum time between first and last event in group
-dead_time = 400; %time after 1 group to wait before looking for next group
+% dead_time = 400; %time after 1 group to wait before looking for next group
+dead_time = 4000;   % 100ns deadtime
 tsum = 3200;
 tolerance = 200;    %tolerance in bins
 
