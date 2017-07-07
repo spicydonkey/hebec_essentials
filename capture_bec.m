@@ -2,6 +2,10 @@
 %   radius and AVERAGE count positions - ITERATED until convergence 
 
 function [bec_cent,bool_bec]=capture_bec(zxy,bec_cent0,r_ball,verbose)
+if ~exist('verbose','var')
+    verbose=0;
+end
+    
 % BEC centre estimate tolerance
 tol=1e-5;
 
@@ -25,7 +29,7 @@ for ii=1:nshots
         err_cent=Inf;
         n_bec_max=0;
         n_iter=0;
-        fi
+        
         while err_cent>tol
             % update ball centre for BEC capture
             cent=cent_new;
@@ -51,6 +55,21 @@ for ii=1:nshots
         % centre has converged! update results
         bec_cent{ii,jj}=cent;
         bool_bec{ii,jj}=is_bec;
+
         
+        % Summary
+        if (num_in_bec/n_bec_max)<0.8
+            warning('While locating BEC, sudden drop in count observed.');
+        end
+        if verbose>0
+            disp('-------------------------------------------------');
+            disp('capture_bec:');
+            fprintf('Shot: %d, BEC#: %d\n',ii,jj);
+            disp(['Iterations: ',num2str(n_iter)]);
+            disp(['Total counts in BEC (/max): ',num2str(num_in_bec),' / ',num2str(n_bec_max)]);
+            % total deviation from initial guess
+            dev_tot=sqrt(sum((bec_cent{ii,jj}-bec_cent0{jj}).^2));
+            disp(['Deviation from initial guess: ',num2str(1e3*dev_tot),' mm']);
+        end
     end
 end
