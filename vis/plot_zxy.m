@@ -17,7 +17,6 @@ if ~exist('SIZE','var')
     SIZE=1;     % default scatter dot size
 end
 
-hold on;    % hold current figure - to plot on
 n_species=size(ZXY,2);
 for i=1:n_species
     temp_zxy=vertcat(ZXY{:,i});     % whole collated data
@@ -32,6 +31,8 @@ for i=1:n_species
     end
     
     scatter_zxy(temp_zxy,SIZE,COLORS(i));
+    hold on;    % hold current figure - to plot on
 end
 
+hold off;
 end
