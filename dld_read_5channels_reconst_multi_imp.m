@@ -31,9 +31,9 @@ normalise_time_flag = normalise_time_flag_call; %boolean variable: if 1 subtract
 reconst_4_corners_nomcp_flag = reconst_4_corners_nomcp_flag_call;   %boolean variable: if 1 reconstructs events with 4 corners but no matching MCP pulse
 reconst_3_corners_flag = reconst_3_corners_flag_call; %boolean variable: if 1 reconstructs events with only 2/3 corners (both with and without MCP pulse)
 
-max_group_time = 3400; %maximum time between first and last event in group
-% dead_time = 400; %time after 1 group to wait before looking for next group
-dead_time = 4000;   % 100ns deadtime
+max_group_time = 3400;  % maximum time between first and last event in group
+dead_time = 400;      % time after 1 group to wait before looking for next group
+% dead_time = 4000;       % DAVID DEBUG
 tsum = 3200;
 tolerance = 200;    %tolerance in bins
 
@@ -428,9 +428,11 @@ if reconst_4_corners_nomcp_flag == 1    %only reconstruct 4 corner events if we'
     number_detections = number_detections_matrix(1);                    %% Possibly overestimates size since errors will reduce this below what it should be
     number_successes = 0;                                               %% Tally successful hits
     which_row = 0;                                                      %% Index of matrix row to write to
-    T_sum = tsum;    %Already defined                                                   %% Is precisely the time taken for signal to travel 8cm, speed 1e6m/s, bins 25e-12
+    T_sum = tsum;    %Already defined                                   %% Is precisely the time taken for signal to travel 8cm, speed 1e6m/s, bins 25e-12
     tolerance_throw = 200;                                              %% Tolerance in what data to throw away
+%     tolerance_throw=dead_time;      % DAVID DEBUG
     tolerance_keep = 200;                                               %% Tolerance in what data to keep
+%     tolerance_keep = dead_time;   % DAVID DEBUG
     search_no = 36;                                                     %% Seach over 9 (=36/4) complete hits
     T_spread = 0;                                                       %% Spreads in times reconstructed
     T_sum_spread = 0;
