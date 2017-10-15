@@ -17,14 +17,14 @@ function weighted_counts=weightedCountSph(vs,u_ref,sig,lim)
 z_psi=diffAngleSph(vs(:,1),vs(:,2),u_ref(1),u_ref(2))/sig(1);
 z_norm=(vs(:,3)-u_ref(3))/sig(2);
 
-% cull outliers
-z_psi=z_psi(z_psi>lim(1));
-z_norm=z_norm(abs(z_norm)>lim(2));
-
 % evaluate Gaussian weights
 w_psi=exp(-0.5*z_psi.^2);
 w_norm=exp(-0.5*z_norm.^2);
 
-weighted_counts=w_psi.*w_norm;
+% cull outliers (set to 0)
+w_psi(z_psi>lim(1))=0;
+w_norm(abs(z_norm)>lim(2))=0;
+
+weighted_counts=sum(w_psi.*w_norm);
 
 end
