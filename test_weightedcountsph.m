@@ -1,23 +1,26 @@
 % Test weigthedCountSph
 
+clear all; close all; 
+tstart=tic;
+
 %% configure
 % source
 n_gen_counts=10000;
-r_sigma=0.05;
+r_sigma=0.033;
 
 % mode distribution
-nAz=200;
-nEl=100;
+nAz=100;
+nEl=50;
 
 % norm integrated
-sig=[0.1,Inf];
+sig=[0.5,Inf];
 lim=[3,3];
 
 % norm resolved
 mode_thphi=[0,0];
-sig2=[5e-1,0.01];
+sig2=[0.3,0.005];
 lim2=[3,3];
-rr=0.8:0.01:1.2;
+rr=0.85:0.005:1.15;
 
 %% genrate source - halo with finite thickness
 % generate randomly distributed counts on sphere
@@ -46,6 +49,7 @@ el=linspace(-pi/2,pi/2,nEl);
 nCountsTot=size(vs_sph,1);
 ww=zeros(size(z_az));
 for ii=1:numel(z_az)
+% parfor ii=1:numel(z_az)
     tzone=[z_az(ii),z_el(ii),1];
 %     tww=weightedCountSph(usph_sph,tzone,sig,lim);
     tww=weightedCountSph(vs_sph,tzone,sig,lim);
@@ -85,3 +89,6 @@ titleStr=sprintf('Mode: THETA=%0.2g, PHI=%0.2g',mode_thphi(:));
 title(titleStr);
 xlabel('Mode norm');
 ylabel('Number of counts in mode');
+
+%% end of code
+toc(tstart);
