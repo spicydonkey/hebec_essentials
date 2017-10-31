@@ -49,13 +49,22 @@ if ~exist('build_txy','var')
     build_txy=1;
 end
 
+% check for special conditions
+if isempty(f_id)
+    % set f_id to all matching files
+    dlist=dir([f_path,'*.txt']);
+    dlist={dlist(:).name}';
+    f_id=sort(unique(cellfun(@(x) dfile2id(x),dlist)));
+end
+
 % Initialiase variables
+nfiles=length(f_id);
 % file output flags
-files.build_txy=false(length(f_id),1);      % dld files processed to txy
-files.missing=false(length(f_id),1);        % missing dld/txy file
-files.lowcount=false(length(f_id),1);       % files with too few counts (skipped in analysis)
-files.highcount=false(length(f_id),1);      % files with too high counts (skipped in analysis)
-files.id_ok=false(length(f_id),1);          % files id's that were successfully processed
+files.build_txy=false(nfiles,1);      % dld files processed to txy
+files.missing=false(nfiles,1);        % missing dld/txy file
+files.lowcount=false(nfiles,1);       % files with too few counts (skipped in analysis)
+files.highcount=false(nfiles,1);      % files with too high counts (skipped in analysis)
+files.id_ok=false(nfiles,1);          % files id's that were successfully processed
 
 % XY rotation
 if ~exist('rot_angle','var')
@@ -64,7 +73,7 @@ end
 
 %% Prepare TXY-files and check for low-counts (possibly errorneous shots)
 if verbose>0, fprintf('Preparing TXY-files...\n'), end;
-for i=1:length(f_id)
+for i=1:nfiles
     % TXY-file does not exist
     if ~fileExists([f_path,'_txy_forc',num2str(f_id(i)),'.txt'])
         if verbose>1, warning('Could not find TXY-file #%d.',f_id(i)); end;
@@ -92,13 +101,12 @@ for i=1:length(f_id)
 end
 
 %% Extract a region of interest from TXY-files
-% f_id=f_id(~files.missing);      % get ids for existing data files
-txy_all=cell(length(f_id),1);   % TXY data cell in window
-ncounts=zeros(length(f_id),1);  % number of counts in window per shot
+txy_all=cell(nfiles,1);   % TXY data cell in window
+ncounts=zeros(nfiles,1);  % number of counts in window per shot
 
 if verbose>0, fprintf('Getting counts in window from TXY-files...\n'); end;
 counter=1;
-for i=1:length(f_id)
+for i=1:nfiles
     % pass for missing files
     if files.missing(i)
         ncounts(i)=NaN;
