@@ -1,8 +1,9 @@
-% PLOT ZXY DATA
+function plot_zxy(ZXY,NDISP,SIZE,COLORS)
+% PLOT_ZXY(ZXY, NDISP, SIZE, COLORS)
+%
 % Plots Nshot-by-Mspecies cell of ZXY counts
 % DKS 
 
-function plot_zxy(ZXY,NDISP,SIZE,COLORS)
 if ~iscell(ZXY)
     warning('ZXY must be a cell array.');
     return;
