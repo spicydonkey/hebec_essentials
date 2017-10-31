@@ -53,7 +53,7 @@ for ii=1:nshots
             n_iter=n_iter+1;
         end
         % centre has converged! update results
-        bec_cent{ii,jj}=cent;
+        bec_cent{ii,jj}=double(cent);
         bool_bec{ii,jj}=is_bec;
 
         
