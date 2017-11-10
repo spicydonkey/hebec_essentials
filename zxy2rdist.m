@@ -2,7 +2,7 @@
 
 function r = zxy2rdist(zxy,cent)
 if ~exist('cent','var')
-    cent=zeros(3,1);
+    cent=zeros(1,3);
 end
 
 ncounts=size(zxy,1);
