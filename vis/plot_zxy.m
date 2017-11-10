@@ -35,5 +35,5 @@ for i=1:n_species
     hold on;    % hold current figure - to plot on
 end
 
-hold off;
+% hold off;
 end
