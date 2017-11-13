@@ -3,6 +3,8 @@ function [txy_all,files,hfig]=load_txy(f_path,f_id,window,mincount,maxcount,rot_
 % Loads raw-data DLD/TXY and get counts in region of interest (after XY rotation) and 
 % save to file
 %
+% [TXY_ALL,FILES,HFIG]=LOAD_TXY(F_PATH,F_ID,WINDOW,MINCOUNT,MAXCOUNT,ROT_ANGLE,BUILD_TXY,VERBOSE,VISUAL)
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % INPUT
 %   required:   
