@@ -1,7 +1,15 @@
+function [bec_cent,bool_bec]=capture_bec(zxy,bec_cent0,r_ball,verbose)
 % Locate condensate by cropping a ball around estimated centres and
 %   radius and AVERAGE count positions - ITERATED until convergence 
+%
+% [BEC_CENT,BOOL_BEC] = CAPTURE_BEC(ZXY,BEC_CENT0,R_BALL,VERBOSE)
+% 
+% NOTE
+%   - cell-typed version (will be upgraded to array-typed)
+%   - BEC_CENT0 and R_BALL are cells too :multiple BEC config - and it's
+%   annoying
+%
 
-function [bec_cent,bool_bec]=capture_bec(zxy,bec_cent0,r_ball,verbose)
 if ~exist('verbose','var')
     verbose=0;
 end
