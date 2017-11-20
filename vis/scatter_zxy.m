@@ -1,8 +1,9 @@
-% SCATTER PLOT ZXY ARRAY
-% Scatter plot for a N-by-3 "ZXY"-array
-% DKS 31/10/2016
-
 function scatter_zxy(ZXY_ARRAY,SIZE,COLOR)
+% Scatter plot ZXY array
+%
+% SCATTER_ZXY(ZXY_ARRAY, SIZE, COLOR)
+%
+% DKS 31/10/2016
 
 if isempty(ZXY_ARRAY)
     warning('Empty array passed as data.');
