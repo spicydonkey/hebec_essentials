@@ -1,5 +1,5 @@
-function norms=vecnorm(vecs)
-% NORMS = VECNORM(VECS)
+function norms=myvecnorm(vecs)
+% NORMS = MYVECNORM(VECS)
 % Evaluates Cartesian norm of N-dimensional vectors
 %
 % NORMS: vector norms

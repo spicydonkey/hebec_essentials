@@ -10,7 +10,7 @@ nvecs=size(vs,1);
 u=repmat(u,[nvecs,1]);
 
 vs_dot_u=sum(vs.*u,2);
-vs_norm=vecnorm(vs);
-u_norm=vecnorm(u);
+vs_norm=myvecnorm(vs);
+u_norm=myvecnorm(u);
 
 psi=real(acos(vs_dot_u./(vs_norm.*u_norm)));

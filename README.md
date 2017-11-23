@@ -8,5 +8,5 @@ Tools and assorted junk (mostly if not all Matlab code) to empower a grad studen
     - [ ] tidy it up
     - [ ] document code
 - issue: `vecnorm` is a builtin MATLAB function from R2017b
-    - [ ] rename appropriately
-    - [ ] update all existing calls
+    - [x] rename appropriately --> myvecnorm
+    - [x] update all existing calls
