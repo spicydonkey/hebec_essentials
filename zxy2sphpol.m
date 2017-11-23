@@ -13,3 +13,5 @@ azim=atan2(zxy(:,3),zxy(:,2));  % azimuthal ang=atan2(Y/X) - 4-quadrant inverse 
 elev=asin(zxy(:,1)./rad);       % elevation ang=asin(Z/NORM)
 
 sphpol=[azim, elev, rad];   % SPHPOL=(azim,elev,R)
+
+end

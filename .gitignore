@@ -3,7 +3,8 @@
 *.zip*
 
 # Unix tools
-*.swp*
+*.sw*
+*.*~
 
 # Log
 *.log
