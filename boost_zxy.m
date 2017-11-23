@@ -1,4 +1,13 @@
 function zxy_f = boost_zxy(zxy_i,dzxy)
+% Add a constant offset to all particle distribution (re-centering)
+%
+% ZXY_F = BOOST_ZXY(ZXY_I,DZXY)
+%
+%
+% ZXY_I:    cell-array of zxy counts
+% DZXY:     1x3 zxy vector to shift
+%
+
 zxy_f=cell(size(zxy_i));
 nshot=size(zxy_i,1);
 for ii=1:nshot
