@@ -7,6 +7,9 @@ function sphpol = zxy2sphpol(zxy)
 % ZXY: should be a Nx3 array
 %
 % SPHPOL: Nx3 array of sph polar coord [AZIM,ELEV,NORM] (Matlab convention)
+%
+% Ranges: azim in [-pi,pi]; elev in [-pi/2,pi/2]; norm in [0,Inf];
+%
 
 rad=sqrt(sum(zxy.^2,2));    % radius
 azim=atan2(zxy(:,3),zxy(:,2));  % azimuthal ang=atan2(Y/X) - 4-quadrant inverse tangent
