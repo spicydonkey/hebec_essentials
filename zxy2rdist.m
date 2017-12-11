@@ -15,7 +15,7 @@ end
 ncounts=size(zxy,1);
 
 % offset centre
-zxy0=zxy-repmat(cent,[ncounts,1]);
+zxy0=zxy-cent;
 
 % evaluate radial distance (from centre)
 r=sqrt(sum((zxy0.^2),2));
