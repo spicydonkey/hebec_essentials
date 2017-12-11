@@ -8,7 +8,8 @@ function kk=sphpol2zxy(ss)
 %
 
 % use matlab's default function to transform spol --> cart
-kk=sph2cart(ss(:,1),ss(:,2),ss(:,3));   % in XYZ form
-kk=circshift(kk,1,2);       % XYZ --> ZXY
+[kkx,kky,kkz]=sph2cart(ss(:,1),ss(:,2),ss(:,3));   % in XYZ form
+% kk=circshift(kk,1,2);       % XYZ --> ZXY
+kk=[kkz,kkx,kky];
 
 end
