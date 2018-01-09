@@ -1,3 +1,6 @@
+function bool_alias = findalias(txy,dt_alias,dxy_alias,verbose)
+% bool_alias = findalias(txy,dt_alias,dxy_alias)
+%
 % TXY post-processor to clean false counts from multi-pulse/ringing/alias reconstruction
 %
 % txy : Nx3 array of [T,X,Y] vectors
@@ -6,7 +9,6 @@
 %
 % bool_alias : Nx1 boolean array to indicate aliased points
 
-function bool_alias = findalias(txy,dt_alias,dxy_alias)
 % check inputs
 if ~exist('dt_alias','var')
     dt_alias=100e-9;        % Default: 100 ns dead-time (Sean's thesis)
@@ -14,12 +16,17 @@ end
 if ~exist('dxy_alias','var')
     dxy_alias=Inf;          % Default: reject all counts if dt in deadtime
 end
+if ~exist('verbose','var')
+    verbose=0;
+end
 
 % check if T is sorted
 Isort=[];
 if ~issorted(txy(:,1))
     % T isn't sorted! might take long
-    warning('Points are not ordered in time! this may take a while...');
+    if verbose>0
+        warning('Points are not ordered in time! this may take a while...');
+    end
     
     % TODO - sort txy according to T
     [txy,Isort]=sortrows(txy,1);    % txy is sorted from here!
