@@ -12,8 +12,6 @@ if ~exist('cent','var')
     cent=zeros(1,3);
 end
 
-ncounts=size(zxy,1);
-
 % offset centre
 zxy0=zxy-cent;
 
