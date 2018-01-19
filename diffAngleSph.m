@@ -8,5 +8,5 @@ function psi=diffAngleSph(th1,phi1,th2,phi2)
 % PHI: elev angles
 % 
 
-psi=acos(sin(phi1).*sin(phi2)+cos(phi1).*cos(phi2).*cos(th1-th2));
+psi=real(acos(sin(phi1).*sin(phi2)+cos(phi1).*cos(phi2).*cos(th1-th2)));
 end
