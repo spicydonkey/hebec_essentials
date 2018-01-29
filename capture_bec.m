@@ -4,20 +4,10 @@ function [bec_cent,bool_bec]=capture_bec(zxy,bec_cent0,r_ball,verbose)
 %
 % [BEC_CENT,BOOL_BEC] = CAPTURE_BEC(ZXY,BEC_CENT0,R_BALL,VERBOSE)
 %
-% NOTE
-%   - cell-typed version (will be upgraded to array-typed)
-%   - BEC_CENT0 and R_BALL are cells too :multiple BEC config - and it's
-%   annoying
 %
 % TODO
-%   [x] refactoring for usability!
-%   [ ] update all calls
-%       [x] halo_2bec
-%       ~~~ run_zonecount~~~
-%       ~~~ sph_zone_analysis~~~
-%       [x] halo_capture
-%       ~~~ run_mf1_collision~~~
-
+%   [ ] generalise to finding a sharp density region (like BEC)
+%
 
 if ~exist('verbose','var')
     verbose=0;
