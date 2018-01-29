@@ -8,7 +8,7 @@ if ~exist('verbose','var')
     verbose=0;
 end
 
-r = vecnorm(x,2);
+r = vnorm(x,2);
 
 r_mean=mean(r);
 r_std=std(r);

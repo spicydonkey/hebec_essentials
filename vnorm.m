@@ -1,4 +1,4 @@
-function r = vecnorm(v,dim)
+function r = vnorm(v,dim)
 %Evaluates norms of vectors
 %
 %   v: vector array

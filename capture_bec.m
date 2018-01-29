@@ -33,7 +33,7 @@ while err_cent>tol
     
     % Evaluate BEC centre
     cent_new=mean(zxy_bec,1);       % approx of BEC centre by mean position
-    err_cent=vecnorm(cent-cent_new);    % error this iteration
+    err_cent=vnorm(cent-cent_new);    % error this iteration
     
     % total count in this ball - used to tell if BEC well-captured
     num_in_bec=sum(bool_bec);
@@ -53,7 +53,7 @@ if verbose>0
     fprintf('Iterations: %d\n',n_iter);
     fprintf('Total counts in BEC (max): %d (%d)\n',num_in_bec,n_bec_max);
     % total deviation from initial guess
-    dev_tot=vecnorm(bec_cent-bec_cent0);
+    dev_tot=vnorm(bec_cent-bec_cent0);
     fprintf('Deviation from initial guess: %0.2g (mm)\n',1e3*dev_tot);
 end
 

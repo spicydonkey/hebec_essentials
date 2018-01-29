@@ -16,6 +16,6 @@ end
 zxy0=zxy-cent;
 
 % evaluate radial distance (from centre)
-r=vecnorm(zxy0,2);
+r=vnorm(zxy0,2);
 
 end

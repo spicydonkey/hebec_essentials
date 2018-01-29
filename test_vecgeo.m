@@ -8,7 +8,7 @@ u_cart=rand(1,3);
 [u_th,u_phi]=cart2sph(u_cart(1),u_cart(2),u_cart(3));
 
 % get norms
-vs_cart_norm=myvecnorm(vs_cart);
+vs_cart_norm=vnorm(vs_cart);
 n_norm_oor=sum(~(abs(vs_cart_norm-vs_r)<2*eps));
 warning('Number of wrong norms: %d\nMax error: %0.2g',n_norm_oor,max(abs(vs_cart_norm-vs_r)));
 
