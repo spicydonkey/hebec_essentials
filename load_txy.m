@@ -42,7 +42,7 @@ if ~exist('maxcount','var')
 end
 
 % default window
-if ~exist('window','var')
+if ~exist('window','var') || isempty(window)
     window={[],[],[]};
 end
 
@@ -69,7 +69,7 @@ files.highcount=false(nfiles,1);      % files with too high counts (skipped in a
 files.id_ok=false(nfiles,1);          % files id's that were successfully processed
 
 % XY rotation
-if ~exist('rot_angle','var')
+if ~exist('rot_angle','var') || isempty(rot_angle)
     rot_angle=0.61;     % set param to default value
 end
 
@@ -140,7 +140,7 @@ for i=1:nfiles
     % filter files by the number of counts in window
     num_counts_in_window=size(txy_temp,1);
     ncounts(i)=num_counts_in_window;
-    if num_counts_in_window<=mincount
+    if num_counts_in_window<mincount
         files.lowcount(i)=1;
         if verbose>0
             warning('ROI counts too LOW in file #%d. Discarding from further processing.',f_id(i));
