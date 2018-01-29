@@ -24,14 +24,10 @@ err_cent=Inf;
 n_bec_max=0;
 n_iter=0;
 while err_cent>tol
-    % update ball centre for BEC capture
-    cent=cent_new;
-    r0=zxy2rdist(zxy,cent);     % vec-norms wrt latest center
-    
-    bool_bec=r0<r_ball;      % logical index vector for BEC - atoms within r_ball
-    zxy_bec=zxy(bool_bec,:);     % collate captured BEC counts
+    cent=cent_new;      % update ball centre for BEC capture
     
     % Evaluate BEC centre
+    [zxy_bec,bool_bec]=inBall(zxy,r_ball,cent);
     cent_new=mean(zxy_bec,1);       % approx of BEC centre by mean position
     err_cent=vnorm(cent-cent_new);    % error this iteration
     
