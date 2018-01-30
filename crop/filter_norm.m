@@ -14,3 +14,5 @@ r = sqrt(sum((x.^2),2));        % get norm - row-vectors
 
 b_filt = (r>rmin & r<rmax);
 xf = x(b_filt,:);
+
+end

@@ -5,3 +5,5 @@ function xf = cfilter_norm(x,rmin,rmax)
 %
 
 xf=cellfun(@(C) filter_norm(C,rmin,rmax),x,'UniformOutput',false);
+
+end
