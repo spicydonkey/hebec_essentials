@@ -27,7 +27,7 @@ while err_cent>tol
     cent=cent_new;      % update ball centre for BEC capture
     
     % Evaluate BEC centre
-    [zxy_bec,bool_bec]=inBall(zxy,r_ball,cent);
+    [zxy_bec,bool_bec]=cropBall(zxy,r_ball,cent);
     cent_new=mean(zxy_bec,1);       % approx of BEC centre by mean position
     err_cent=vnorm(cent-cent_new);    % error this iteration
     
