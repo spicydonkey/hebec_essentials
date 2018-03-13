@@ -15,7 +15,7 @@ end
 
 % config iterator
 tol=1e-5;   % BEC centre estimate tolerance
-
+max_iter=1e2;
 
 % initialise iterative minimisation algorithm
 cent=bec_cent0;
@@ -23,13 +23,15 @@ cent_new=cent;
 err_cent=Inf;
 n_bec_max=0;
 n_iter=0;
-while err_cent>tol
+while err_cent>tol && n_iter<max_iter
     cent=cent_new;      % update ball centre for BEC capture
+    err_temp=err_cent;
     
     % Evaluate BEC centre
     [zxy_bec,bool_bec]=cropBall(zxy,r_ball,cent);
     cent_new=mean(zxy_bec,1);       % approx of BEC centre by mean position
     err_cent=vnorm(cent-cent_new);    % error this iteration
+    relerr=abs(err_temp-err_cent)/err_cent;
     
     % total count in this ball - used to tell if BEC well-captured
     num_in_bec=sum(bool_bec);
@@ -39,7 +41,7 @@ while err_cent>tol
     
     n_iter=n_iter+1;
 end
-% centre has converged! update results
+% centre has converged! OR max iter reached... update results
 bec_cent=double(cent);
 
 % Summary
