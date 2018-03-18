@@ -1,5 +1,5 @@
 function id = dfile2id(dfilename,verbose)
-% ID = DFILE2ID(DFILENAME,TOK)
+% ID = DFILE2ID(DFILENAME,verbose)
 %
 % Extracts shot ID from DLD data
 %
