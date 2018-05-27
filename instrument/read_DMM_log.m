@@ -3,11 +3,13 @@
 % 2016-06-16: first implementation
 % 2018-05-24: bug fix: smarter way of looking for processing datetime and cell
 %   formatting
+% 2018-05-27: bug fix: DMM logged in USB writes a ragged csv file.
+%   linecount is more robust than numLine.
 
 
 function DATAOUT = read_DMM_log(filename)
 
-nlines=numLine(filename);
+nlines=linecount(filename);
 nSamp=nlines-2;
 
 % convert csv to cell
@@ -18,7 +20,14 @@ for iLine = 1:nlines
 end
 fclose(fid);
 
-data_collated=vertcat(DATA_CELL{:});
+
+% collate all data into single cell
+nelems=max(cellfun(@(c) length(c),DATA_CELL));     % max length of line
+data_collated=cell(nlines,nelems);
+for ii=1:nlines
+    data_collated(ii,1:length(DATA_CELL{ii}))=DATA_CELL{ii};
+end
+
 b_nonempty_cell=cellfun(@(c) ~isempty(c),data_collated);
 
 idx_col_datetime=find(b_nonempty_cell(1,:),1);      % index which datetime info starts

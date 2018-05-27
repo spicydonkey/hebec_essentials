@@ -7,7 +7,8 @@
 
 function DATA = read_osci_rigol(FILENAME)
 
-nlines = numLine(FILENAME);
+% nlines = numLine(FILENAME);
+nlines = linecount(FILENAME);
 nSamp = nlines-2;       % l1:header; l2:units+time; l3-end:data
 DATA_cell=cell(nlines,1);
 
@@ -27,6 +28,7 @@ for iLine=1:nSamp
 end
 
 t = 0:t_incre:t_incre*(nSamp-1);    % create time-stamp
+t = t + t_start;
 
 DATA = [t' DATA];   % concantenate time and channel meas
 
