@@ -1,11 +1,12 @@
+function DATA = read_osci_rigol(FILENAME)
 % Script to read csv data from Rigol Oscilloscipe DS1054Z
+%   DATA = read_osci_rigol(FILENAME)
+%
+%   DATA: [TIME; CH1;...; CH_N]
+%
 % DK Shin
 % 02/08/16
 
-% DATA FORMAT:
-% [TIME; CH1;...; CH_N]
-
-function DATA = read_osci_rigol(FILENAME)
 
 % nlines = numLine(FILENAME);
 nlines = linecount(FILENAME);
