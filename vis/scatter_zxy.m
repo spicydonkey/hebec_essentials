@@ -16,5 +16,5 @@ if ~exist('SIZE','var')
     SIZE=1;     % default scatter dot size
 end
 
-scatter3(ZXY_ARRAY(:,2),ZXY_ARRAY(:,3),ZXY_ARRAY(:,1),SIZE,[COLOR,'.']);
+scatter3(ZXY_ARRAY(:,2),ZXY_ARRAY(:,3),ZXY_ARRAY(:,1),SIZE,COLOR,'.');
 end
