@@ -16,14 +16,14 @@ b_spol=true(n_v,3);     % initialise boolean flag in each dim
 for ii=1:3
     if ~isempty(lim_latlon{ii})
         tlim=lim_latlon{ii};    % this dim limit
-        tv=V(:,ii);             % this component
+        tvs=Vspol(:,ii);         % this component
         
-        b_spol(:,ii)=(tlim(1)<tv)&(tlim(2)>tv);
+        b_spol(:,ii)=(tlim(1)<tvs)&(tlim(2)>tvs);
     end
 end
 
 % find vecs in region
-b_in=prod(b_spol,2);
+b_in=prod(b_spol,2)==1;
 n_in=sum(b_in);
 
 end
