@@ -17,7 +17,6 @@ function COUNT = nhist(X, EDGE)
 %
 % TODO: Usage examples:
 %
-% 
 
 % Error checks/Parse inputs
 if ndims(X)>2 %#ok<ISMAT>
@@ -29,6 +28,12 @@ ndim = size(X,2);     % get the dimension of vectors
 if ~iscell(EDGE)
     error('nhist: EDGE must be a "cell" of bin edges');
 else
+    % empty set --> trivial
+    if isempty(X)
+        COUNT=zeros([cellfun(@(ed) length(ed)-1,EDGE),1]);
+        return 
+    end
+    % dim mismatch: vectors and edges
     if ndim~=length(EDGE)
         error('nhist: EDGE must be a (1 x Ndim) cell of bin edges.');
     end
