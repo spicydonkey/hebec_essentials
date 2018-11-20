@@ -1,4 +1,4 @@
-function [v_in,b_in]=inCone(zxy,az,el,theta)
+function [v_in,b_in,n]=inCone(zxy,az,el,theta)
 %Get counts in an extended cone region.
 %
 %   zxy: array of Cart row vectors
@@ -8,7 +8,7 @@ function [v_in,b_in]=inCone(zxy,az,el,theta)
 %
 %   v_in: C-vecs in cone
 %   b_in: boolean array for vecs in cone
-%
+%   n:  num vecs in cone
 
 
 % transform Caresian --> spherical
@@ -20,5 +20,6 @@ dtheta=diffAngleSph(vsph(:,1),vsph(:,2),az,el);
 % filter vecs in cone
 b_in=dtheta<theta;
 v_in=zxy(b_in,:);
+n=sum(b_in);
 
 end
