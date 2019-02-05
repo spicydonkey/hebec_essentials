@@ -1,9 +1,9 @@
-% Conver Euler angle to rotation matrix
+% Convert Euler angle to rotation matrix
 % Axis rotation sequence is in the conventional XYZ order
 %   source: http://nghiaho.com/?page_id=846
 
 function R=euler2rotm(euler_angle)
-    % euler_angle: 1x3 array [alpha,beta,gamma]
+    % euler_angle (TAIT-BRYAN angle): 1x3 array [alpha,beta,gamma]
     %   alpha   (-pi/pi)
     %   beta    (-pi/2,pi/2)
     %   gamma   (-pi,pi)
