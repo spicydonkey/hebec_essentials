@@ -1,4 +1,4 @@
-function scatter_zxy(ZXY_ARRAY,SIZE,COLOR)
+function S=scatter_zxy(ZXY_ARRAY,SIZE,COLOR)
 % Scatter plot ZXY array
 %
 % SCATTER_ZXY(ZXY_ARRAY, SIZE, COLOR)
@@ -16,5 +16,5 @@ if ~exist('SIZE','var')
     SIZE=1;     % default scatter dot size
 end
 
-scatter3(ZXY_ARRAY(:,2),ZXY_ARRAY(:,3),ZXY_ARRAY(:,1),SIZE,COLOR,'.');
+S=scatter3(ZXY_ARRAY(:,2),ZXY_ARRAY(:,3),ZXY_ARRAY(:,1),SIZE,COLOR,'.');
 end
