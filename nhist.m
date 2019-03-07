@@ -1,4 +1,6 @@
 function COUNT = nhist(X, EDGE)
+% COUNT = nhist(X, EDGE)
+%
 % Edited by DKS 07/11/2016 (original: histcn.m by Bruno Luong)
 % function count = histcn(X, EDGE)
 %  edge1, edge2, ..., edgeN

@@ -1,4 +1,5 @@
 function [v_out,I_out,n_out,cpos,se_cpos,sd_pos] = boxcull(v_in,box_lim)
+% [v_out,I_out,n_out,cpos,se_cpos,sd_pos] = boxcull(v_in,box_lim)
 %Extract vectors lying inside a box.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
