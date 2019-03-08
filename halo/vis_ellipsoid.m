@@ -28,18 +28,19 @@ function ax_Ellipsoid = vis_ellipsoid(center,radii,evecs,v)
 %------------- BEGIN CODE --------------
 
 % configs
-col_coord='r';
+col_cent='k';
+col_semiax={'r','g','b'};
 col_surf='b';
 
 % center ---------------------------------------------
-ax_Ellipsoid.center = scatter3(center(1),center(2),center(3),30,'o','filled','MarkerFaceColor',col_coord,'MarkerEdgeColor','none');
+ax_Ellipsoid.center = scatter3(center(1),center(2),center(3),30,'o','filled','MarkerFaceColor',col_cent,'MarkerEdgeColor','none');
 
 % principal semi-axes ---------------------------------------------
 for ii=1:3
     p1 = center';
     p2 = center' + radii(ii)*evecs(:,ii)';
-    ax_Ellipsoid.arrow3{ii} = arrow3(p1,p2,col_coord);
-    ax_Ellipsoid.arrow3{ii}(1).LineWidth=1;
+    ax_Ellipsoid.arrow3{ii} = arrow3(p1,p2,col_semiax{ii});
+    ax_Ellipsoid.arrow3{ii}(1).LineWidth=1.25;
 end
 
 % surface ---------------------------------------------
@@ -50,7 +51,7 @@ ax_ngrid=100;       % grid # per dim
 f_ellipsoid = ellipsoidEqn(v,x,y,z);      
 
 ax_Ellipsoid.surf = patch( isosurface( x, y, z, f_ellipsoid, 0 ) );
-set(ax_Ellipsoid.surf,'FaceColor',col_surf,'FaceAlpha',0.33,'EdgeColor','none');
+set(ax_Ellipsoid.surf,'FaceColor',col_surf,'FaceAlpha',0.2,'EdgeColor','none');
 
 %------------- END OF CODE --------------
 end
