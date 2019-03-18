@@ -51,8 +51,25 @@ n_azel=n_azel./max(n_azel(:));
 hdist.azel=plotFlatMapWrappedRad(az,el,n_azel,'rect');
 axis tight;
 axis equal;
-cbar=colorbar();
+box on;
+
+set(ax(2),'Position',ax(2).OuterPosition);
+
+set(ax(2),'XAxisLocation','origin');
+xlabel('$\theta$');
+ylabel('$\phi$');
+
+cbar=colorbar('EastOutside');
+cbar.Position(3)=0.025;
 cbar.Label.String='P';
+% change colorbar position
+ax_pos = plotboxpos(ax(2));
+% pos_ax=get(gca,'Position');
+pos_cbar=get(cbar,'Position');
+pos_cbar(3)=0.025;
+pos_cbar(1)=ax_pos(1)+ax_pos(3)+1*pos_cbar(3);
+set(cbar,'Position',pos_cbar);
+% set(gca,'Position',pos_ax);     % return axis to original
 
 
 % Th/Phi dependency =============================
@@ -60,27 +77,27 @@ vspol=zxy2sphpol(zxy);
 
 % azim dependency ----------------------------
 ax(3)=subplot(4,1,3);
-[n_az,az_ed]=histcounts(vspol(:,1)/pi,nbins_az);
+[n_az,az_ed]=histcounts(rad2deg(vspol(:,1)),nbins_az);
 n_az=n_az/max(n_az);    % norm to max
 hdist.az=stairs(edge2cent(az_ed),n_az);
 hdist.az.Color='k';
-xlabel('\theta/\pi');
+xlabel('$\theta (^\circ)$');
 ylabel('P');
-xlim([-1,1]);
+xlim(180*[-1,1]);
 
 
 % elev dependency ----------------------------
 ax(4)=subplot(4,1,4);
-[n_el,el_ed]=histcounts(vspol(:,2)/pi,nbins_el,'Normalization','pdf');
-elev_bin_vol=abs(diff(cone_solang(elev2polar(pi*el_ed))));
+[n_el,el_ed]=histcounts(rad2deg(vspol(:,2)),nbins_el,'Normalization','pdf');
+elev_bin_vol=abs(diff(cone_solang(elev2polar(deg2rad(el_ed)))));
 n_el=n_el./elev_bin_vol;     % normalise by bin vol
 n_el=n_el/max(n_el);        % normalise by max
 hdist.el=stairs(edge2cent(el_ed),n_el);
 hdist.el.Color='k';
 
-xlabel('\phi/\pi');
+xlabel('$\phi (^\circ)$');
 ylabel('P');
-xlim([-0.5,0.5]);
+xlim(90*[-1,1]);
 
 
 % tidy
