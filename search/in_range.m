@@ -10,7 +10,7 @@ function [X,B] = in_range(x,Xlim)
 %
 % DKS 2019
 
-B = abs(x - mean(Xlim)) <= range(Xlim);
+B = abs(x - mean(Xlim)) <= range(Xlim)/2;
 X = x(B);
 
 end
