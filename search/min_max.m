@@ -7,6 +7,10 @@ function [M,I] = min_max(x)
 %
 % DKS 2019
 
-M = [min(x(:)),max(x(:))];
+[x_min,I_min] = minall(x);
+[x_max,I_max] = maxall(x);
+
+M = [x_min,x_max];
+I = [I_min,I_max];
 
 end
