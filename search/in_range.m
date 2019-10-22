@@ -1,9 +1,9 @@
-function [X,B] = in_range(x,Xlim)
+function [B,X] = in_range(x,Xlim)
 %IN_RANGE filters elements of real-valued array if in/out-side a min-max limit
-%       [X,B] = in_range(x,Xlim)
+%       [B,X] = in_range(x,Xlim)
 %
-%   X is filtered elements (1D array)
 %   B is boolean array indicating whether elem is in/out (1 if IN)
+%   X is filtered elements (1D array)
 %   
 %   x is the input array
 %   Xlim is the [min, max] limit (inclusive)
