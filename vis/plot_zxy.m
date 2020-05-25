@@ -1,4 +1,4 @@
-function plot_zxy(ZXY,NDISP,SIZE,COLORS)
+function S = plot_zxy(ZXY,NDISP,SIZE,COLORS)
 % PLOT_ZXY(ZXY, NDISP, SIZE, COLORS)
 %
 % Plots Nshot-by-Mspecies cell of ZXY counts
@@ -19,6 +19,7 @@ if ~exist('SIZE','var')
 end
 
 n_species=size(ZXY,2);
+S = gobjects(1,n_species);
 for i=1:n_species
     temp_zxy=vertcat(ZXY{:,i});     % whole collated data
     
@@ -31,7 +32,7 @@ for i=1:n_species
         temp_zxy=temp_zxy(idx_sel,:);
     end
     
-    scatter_zxy(temp_zxy,SIZE,COLORS(i));
+    S(i) = scatter_zxy(temp_zxy,SIZE,COLORS(i));
     hold on;    % hold current figure - to plot on
 end
 

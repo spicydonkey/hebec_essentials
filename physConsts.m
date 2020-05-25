@@ -25,9 +25,9 @@ s.e = 1.602e-19;                % elementary charge [C]
 
 % Helium
 s.m_He=6.646476e-27;            % mass of helium-4 [kg]
-s.gamma_He=1.62e6*2*pi;         
 s.lambda_He=1083.33e-9;
-s.life_He=1/(s.gamma_He*2*pi);
+s.life_He=97.87e-9;             % lifetime  [s]     (DOI: 10.1103/RevModPhys.84.175)
+s.gamma_He=1/s.life_He;         % linewidth (halfwidth of spectral line) [Hz]
 s.Is_He=0.17;
 s.mu_He=2.8e6;
 s.k_He=(2*pi)/s.lambda_He;      % wavenumber of cooling photon
