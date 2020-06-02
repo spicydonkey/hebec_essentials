@@ -37,4 +37,5 @@ for i=1:n_species
 end
 
 % hold off;
+axis equal;
 end

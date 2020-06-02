@@ -1,4 +1,4 @@
-function [az,el] = sphgrid(naz,nel,az_lim,el_lim)
+function [az,el] = sphgrid(naz,nel,az_lim,el_lim,b_wrap)
 %SPHGRID construct 2D lat-lon grid on sphere.
 %   [AZ,EL] = SPHGRID(NAZ,NEL)
 %   [AZ,EL] = SPHGRID(NAZ,NEL,AZ_LIM,EL_LIM)
@@ -10,11 +10,15 @@ function [az,el] = sphgrid(naz,nel,az_lim,el_lim)
 %   
 
 % check args
-if ~exist('az_lim','var')
-    az_lim=[-pi,pi];
-end
-if ~exist('el_lim','var')
-    el_lim=[-pi/2,pi/2];
+if nargin < 5
+    b_wrap = false;     % default don't wrap
+    
+    if ~exist('az_lim','var')
+        az_lim=[-pi,pi];
+    end
+    if ~exist('el_lim','var')
+        el_lim=[-pi/2,pi/2];
+    end
 end
 
 % 1D linearly spaced lat/lon

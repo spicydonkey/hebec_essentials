@@ -1,4 +1,4 @@
-function [n_r,r_cent,b]=radialprofile(r_data,r_ed,verbose)
+function [n_r_arb,r_cent,b,n_r]=radialprofile(r_data,r_ed,verbose)
 %Get radial distribution normalised by r-dependent bin volume
 %
 %   r_data: array of vector norms
@@ -25,13 +25,14 @@ r_cent=r_ed(1:end-1)+0.5*diff(r_ed);
 % normalise radially dependent bin volume = 4/3*pi*(r2^3 -r1^3)
 vol_sph = @(r) 4/3*pi*r.^3;
 vol_r_bin=diff(vol_sph(r_ed));      % exact bin volume
+
 n_r=N_r./vol_r_bin;                 % normalise by bin vol
 
+n_r_arb=n_r/maxall(n_r);       % normalies by max
 
-n_r=n_r./(sum(n_r)*diff(r_ed));     % norm- bin-size
-n_r=n_r/max(n_r);       % normalies by max
 
 % histogram plot
+b=[];
 if verbose>0
     b=stairs(r_cent,n_r);
     
